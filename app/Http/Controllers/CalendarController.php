@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-namespace App\Http\Controllers;
-
 
 use Illuminate\Http\Request;
 use Microsoft\Graph\Graph;
@@ -17,13 +15,10 @@ class CalendarController extends Controller
         dd(session()->all());
 
         $viewData = $this->loadViewData();
-
         $graph = $this->getGraph();
 
-        // Get user's timezone
         $timezone = Timezones::getTzFromWindows($viewData['userTimeZone']);
 
-        // Get start and end of the current week (Sunday to Sunday)
         $startOfWeek = new \DateTimeImmutable('sunday -1 week', $timezone);
         $endOfWeek = new \DateTimeImmutable('sunday', $timezone);
 
@@ -37,37 +32,32 @@ class CalendarController extends Controller
             '$top' => 25
         ];
 
-    //     $getEventsUrl = '/me/calendarView?' . http_build_query($queryParams);
+        // Uncomment and configure if you need to fetch events
+        // $events = $graph->createRequest('GET', '/me/calendarView?' . http_build_query($queryParams))
+        //     ->addHeaders(['Prefer' => 'outlook.timezone="' . $viewData['userTimeZone'] . '"'])
+        //     ->setReturnType(Model\Event::class)
+        //     ->execute();
 
-    //     $events = $graph->createRequest('GET', $getEventsUrl)
-    //         ->addHeaders([
-    //             'Prefer' => 'outlook.timezone="' . $viewData['userTimeZone'] . '"'
-    //         ])
-    //         ->setReturnType(Model\Event::class)
-    //         ->execute();
+        // $viewData['events'] = $events;
 
-    //     $viewData['events'] = $events;
+        // return view('calendar', $viewData);
+    }
 
-    //     return view('calendar', $viewData);
-    // }
+    private function getGraph(): Graph
+    {
+        $tokenCache = new TokenCache();
+        $accessToken = $tokenCache->getAccessToken();
 
-    // private function getGraph(): Graph
-    // {
-    //     $tokenCache = new TokenCache();
-    //     $accessToken = $tokenCache->getAccessToken();
+        $graph = new Graph();
+        $graph->setAccessToken($accessToken);
 
-    //     $graph = new Graph();
-    //     $graph->setAccessToken($accessToken);
+        return $graph;
+    }
 
-    //     return $graph;
-    // }
-
-    // private function loadViewData()
-    // {
-    //     // Stub for now – populate with real user info in production
-    //     return [
-    //         'userTimeZone' => 'Pacific Standard Time', // or dynamically from user profile
-    //     ];
-    // }
-}
+    private function loadViewData()
+    {
+        return [
+            'userTimeZone' => 'Pacific Standard Time',
+        ];
+    }
 }

@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-namespace App\Http\Controllers;
+namespace App\Controllers;
 
 class Timezones
 {

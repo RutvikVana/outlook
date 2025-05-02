@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-namespace App\Http\Controllers;
-
 
 use Illuminate\Http\Request;
 use Microsoft\Graph\Graph;
@@ -10,7 +8,6 @@ use Microsoft\Graph\Model;
 
 class HomeController extends Controller
 {
-    // Display welcome page
     public function welcome()
     {
         $userName = session('userName');
@@ -22,7 +19,6 @@ class HomeController extends Controller
         ]);
     }
 
-    // Fetch and display user emails
     public function getEmails()
     {
         $accessToken = session('accessToken');
@@ -34,7 +30,6 @@ class HomeController extends Controller
             $graph = new Graph();
             $graph->setAccessToken($accessToken);
 
-            // Fetch the user's emails
             $emails = $graph->createRequest('GET', '/me/messages')
                 ->setReturnType(Model\Message::class)
                 ->execute();
@@ -45,7 +40,6 @@ class HomeController extends Controller
         }
     }
 
-    // Fetch and display user calendar events
     public function getCalendarEvents()
     {
         $accessToken = session('accessToken');
@@ -57,7 +51,6 @@ class HomeController extends Controller
             $graph = new Graph();
             $graph->setAccessToken($accessToken);
 
-            // Fetch the user's calendar events
             $events = $graph->createRequest('GET', '/me/calendar/events')
                 ->setReturnType(Model\Event::class)
                 ->execute();
